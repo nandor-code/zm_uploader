@@ -1,6 +1,6 @@
 {
     "config": {
-        "IMGPATH": "/nfs/Videos/Zoneminder/events/1",
+        "IMGPATH": "/nfs/Videos/Zoneminder/events/1/**/snapshot.jpg",
         "MAXCONCURRENTUPLOAD": 10,
 	"UPDATE_INTERVAL": 2000,
 	"STALE_FILE_UPLOAD_SEC": 5,
