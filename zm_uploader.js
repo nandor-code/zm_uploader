@@ -35,7 +35,7 @@ setTimeout( checkUploads, 1 );
 
 function checkUploads()
 {
-    if( (Date.now() - reportTime) / 1000 > 10 ) 
+    if( (Date.now() - reportTime) / 1000 > config.REPORT_SEC ) 
     {
         console.log("Checking for uploads (" + uploads + " proccessed so far)");
         reportTime = Date.now();

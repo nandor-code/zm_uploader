@@ -4,6 +4,7 @@
         "MAXCONCURRENTUPLOAD": 10,
 	"UPDATE_INTERVAL": 2000,
 	"STALE_FILE_UPLOAD_SEC": 5,
+        "REPORT_SEC": 60,
 	"S3BUCKET": "camalert"
     }
 }
