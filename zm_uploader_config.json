@@ -1,7 +1,9 @@
 {
     "config": {
-        "IMMPATH": "/nfs/Videos/Zoneminder/events",
+        "IMGPATH": "/nfs/Videos/Zoneminder/events/1",
         "MAXCONCURRENTUPLOAD": 10,
-	"S3BUCKET": "s3://camalert/"
+	"UPDATE_INTERVAL": 2000,
+	"STALE_FILE_UPLOAD_SEC": 5,
+	"S3BUCKET": "camalert"
     }
 }
