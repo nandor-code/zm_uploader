@@ -2,9 +2,9 @@
     "config": {
         "IMGPATH": "/nfs/Videos/Zoneminder/events/1/**/snapshot.jpg",
         "MAXCONCURRENTUPLOAD": 10,
-	"UPDATE_INTERVAL": 2000,
-	"STALE_FILE_UPLOAD_SEC": 5,
+	    "UPDATE_INTERVAL": 2000,
+	    "STALE_FILE_UPLOAD_SEC": 8,
         "REPORT_SEC": 60,
-	"S3BUCKET": "camalert"
+    	"S3BUCKET": "camalert"
     }
 }
