@@ -9,6 +9,11 @@ const chokidar = require('chokidar');
 const awsCreds = JSON.parse(fs.readFileSync('./aws.json'));
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3(awsCreds);
+const ssm = new AWS.SSM(awsCreds);
+
+var uploadBucket = "Unknown";
+
+ssm.getParameter( { Name: 'slack_door_bell_bucket' }, function(err,data) { uploadBucket = data.Parameter.Value; console.log("Got upload Bucket:", uploadBucket); } );
 
 const configObj = JSON.parse(fs.readFileSync('./zm_uploader_config.json'));
 const config = configObj.config;
@@ -58,12 +63,12 @@ const uploadToS3 = ( file ) => {
 
     const fileContent = fs.readFileSync(file);
     const params = {
-        Bucket: config.S3BUCKET,
+        Bucket: uploadBucket,
         Key: 'snapshot.jpg',
         Body: fileContent
     };
 
-    console.log("Uploading " + file + " to " + config.S3BUCKET );
+    console.log("Uploading " + file + " to " + uploadBucket );
 
     // Actual upload.
     return new Promise((resolve, reject) => {
