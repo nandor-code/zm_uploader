@@ -4,12 +4,20 @@
 const fs = require('fs');
 const util = require('util');
 const chokidar = require('chokidar');
+const io = require('@pm2/io');
 
 // AWS config.
 const awsCreds = JSON.parse(fs.readFileSync('./aws.json'));
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3(awsCreds);
 const ssm = new AWS.SSM(awsCreds);
+
+const rtUploads = io.metric({
+  name: 'Uploads',
+  id: 'zm_uploader/realtime/uploads',
+});
+
+rtUploads.set(0);
 
 var uploadBucket = "Unknown";
 
@@ -77,6 +85,7 @@ const uploadToS3 = ( file ) => {
                 reject(error);
             } else {
                 uploads++;
+				rtUploads.set( uploads );
                 resolve(result);
             }
         });
