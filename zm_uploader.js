@@ -17,9 +17,22 @@ const rtUploads = io.metric({
   id: 'zm_uploader/realtime/uploads',
 });
 
+var uploadMeter = io.meter({
+  name        : 'Uploads/day',
+  samples     : 1,
+  timeframe   : 86400
+});
+
+var uploadBytes = io.metric({
+  name        : 'KBytes sent',
+  type        : 'histogram',
+  measurement : 'count'
+});
+
 rtUploads.set(0);
 
 var uploadBucket = "Unknown";
+var bytesSent    = 0;
 
 ssm.getParameter( { Name: 'slack_door_bell_bucket' }, function(err,data) { uploadBucket = data.Parameter.Value; console.log("Got upload Bucket:", uploadBucket); } );
 
@@ -56,12 +69,12 @@ function checkUploads()
 
     for( var f in files )
     {
-	var changeSec = ( (Date.now() - files[f]) / 1000 );
+    var changeSec = ( (Date.now() - files[f]) / 1000 );
         //console.log( "file " + f + " last changed " + ( changeSec ) + " seconds ago" );
-	if( changeSec >= config.STALE_FILE_UPLOAD_SEC )
+    if( changeSec >= config.STALE_FILE_UPLOAD_SEC )
         {
             uploadToS3( f );
-	    delete files[f];
+            delete files[f];
         }
     }
     return setTimeout(checkUploads, config.UPDATE_INTERVAL);
@@ -76,6 +89,9 @@ const uploadToS3 = ( file ) => {
         Body: fileContent
     };
 
+    bytesSent += ( fileContent.length / 1024 );
+    uploadBytes.set( bytesSent );
+
     console.log("Uploading " + file + " to " + uploadBucket );
 
     // Actual upload.
@@ -85,7 +101,8 @@ const uploadToS3 = ( file ) => {
                 reject(error);
             } else {
                 uploads++;
-				rtUploads.set( uploads );
+                rtUploads.set( uploads );
+                uploadMeter.mark();
                 resolve(result);
             }
         });
